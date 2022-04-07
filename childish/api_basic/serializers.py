@@ -1,5 +1,11 @@
 from rest_framework import serializers
-from .models import UserCar, CarBrand, CarModel
+from .models import UserCar, CarBrand, CarModel, Account
+
+
+class AccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Account
+        fields = ['id', 'driver', 'owner', 'first_name', 'email']
 
 
 class UserCarSerializer(serializers.ModelSerializer):
