@@ -2,8 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
 
-PRIMARY_DRIVER = (('Y', 'Yes'), ('N', 'No'))
-ACCIDENTS_HISTORY = (('Y', 'Yes'), ('N', 'No'))
 # Create your models here.
 
 
@@ -42,8 +40,8 @@ class SoftDeleteUserModel(User):
 
 
 class Account(SoftDeleteUserModel):
-    driver = models.CharField(max_length=3, choices=PRIMARY_DRIVER)
-    accident_status = models.CharField(max_length=3, choices=ACCIDENTS_HISTORY)
+    age = models.IntegerField(blank=True)
+    driving_license_exp_date = models.DateField(blank=True)
 
     def __str__(self):
         return self.first_name
@@ -66,9 +64,9 @@ class CarModel(SoftDeleteModel):
 
 class UserCar(SoftDeleteModel):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    car_brand = models.ManyToManyField(CarBrand)
+    car_brand = models.ForeignKey(CarBrand, on_delete=models.CASCADE)
     car_model = models.ForeignKey(CarModel, on_delete=models.CASCADE)
-    first_reg = models.DateTimeField()
+    first_reg = models.DateField()
     odometer = models.IntegerField()
 
     def __str__(self):
