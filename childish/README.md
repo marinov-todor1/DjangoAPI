@@ -1,4 +1,4 @@
-###Design Notes
+### Design Notes
 Due to no specific instructions, the following assumptions were made:
 
 1. Token Authentication is not required
@@ -6,7 +6,7 @@ Due to no specific instructions, the following assumptions were made:
 
 ## How to use
 
-###Methods for register/
+### Methods for register/
 
 GET register/ - Show instructions
 
@@ -44,7 +44,7 @@ Example Response
 }
 ```
 ---
-###Methods for usercars/
+### Methods for usercars/
 GET usercars/ - Return all cars in the DB
 
 Example Response
@@ -91,7 +91,7 @@ Example Response
 }
 ```
 ---
-###Methods for usercar/id/
+### Methods for usercar/id/
 GET usercar/id/ - Returns details for a specific car by its id field
 
 Example Response
@@ -132,7 +132,7 @@ DELETE usercar/id/ - Delete car record
 No response is returned
 
 ---
-###Methods for brands/
+### Methods for brands/
 GET brands/ - Returns all brands in the DB
 
 Example Response
@@ -179,7 +179,7 @@ DELETE brands/id/ - Delete brand record
 No response is returned
 
 ---
-###Methods for models/
+### Methods for models/
 GET models/ - Returns all models in the DB
 
 Example Response
@@ -233,7 +233,7 @@ DELETE models/id/ - Delete model record
 No response is returned
 
 ---
-###Methods for accounts/
+### Methods for accounts/
 GET accounts/ - Returns all registered accounts
 
 Example Response
