@@ -1,6 +1,6 @@
 
 from .models import UserCar, CarBrand, CarModel, Account
-from .serializers import AccountSerializer, UserCarSerializer, CarBrandSerializer, CarModelSerializer
+from .serializers import AccountSerializer, UserCarSerializer, CarBrandSerializer, CarModelSerializer, RegistrationSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, generics, mixins
@@ -108,40 +108,22 @@ class UserCarDetail(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@api_view(['GET', 'POST'])
-def UserCar_list(request):
-    if request.method == "GET":
-        UserCars = UserCar.objects.all()
-        serializer = UserCarSerializer(UserCars, many=True)
-        return Response(serializer.data)
+class RegistrationView(APIView):
 
-    elif request.method == "POST":
-        serializer = UserCarSerializer(data=request.data)
+    def get(self, request):
+        data = {'instructions': 'please register by submitting the following information', 'email': '',
+                'username': '', 'first_name': '', 'driver': 'Y/N', 'ever_involved_in_accidents': 'Y/N'}
 
+        return Response(data)
+
+    def post(self, request):
+        serializer = RegistrationSerializer(data=request.data)
+        data = {}
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-@api_view(['GET', 'PUT', 'DELETE'])
-def UserCar_detail(request, pk):
-    try:
-        user_car = UserCar.objects.get(pk=pk)
-    except UserCar.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    if request.method == "GET":
-        serializer = UserCarSerializer(user_car)
-        return Response(serializer.data)
-
-    elif request.method == "PUT":
-        serializer = UserCarSerializer(user_car, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    elif request.method == "DELETE":
-        user_car.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+            account = serializer.save()
+            data['response'] = 'successfully registered new user.'
+            data['email'] = account.email
+            data['username'] = account.username
+        else:
+            data = serializer.errors
+        return Response(data)
