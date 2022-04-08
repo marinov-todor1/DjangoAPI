@@ -1,9 +1,7 @@
-
 from .models import UserCar, CarBrand, CarModel, Account
 from .serializers import AccountSerializer, UserCarSerializer, CarBrandSerializer, CarModelSerializer, RegistrationSerializer
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status, generics, mixins
+from rest_framework.response import  Response
+from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -33,9 +31,6 @@ class AccountGeneric(generics.GenericAPIView, mixins.ListModelMixin, mixins.Dest
     def put(self, request, id=None):
         return self.update(request, id)
 
-    def delete(self, request, id=None):
-        return self.destroy(request, id)
-
 
 class UserCarGeneric(generics.GenericAPIView, mixins.ListModelMixin, mixins.DestroyModelMixin,
                      mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
@@ -64,55 +59,59 @@ class UserCarGeneric(generics.GenericAPIView, mixins.ListModelMixin, mixins.Dest
         return self.destroy(request, id)
 
 
-class UserCarAPIView(APIView):
+class BrandsGeneric(generics.GenericAPIView, mixins.ListModelMixin, mixins.DestroyModelMixin,
+                    mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
+
+    serializer_class = CarBrandSerializer
+    queryset = CarBrand.objects.all()
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        UserCars = UserCar.objects.all()
-        serializer = UserCarSerializer(UserCars, many=True)
-        return Response(serializer.data)
+    lookup_field = 'id'
+
+    def get(self, request, id=None):
+        if id:
+            return self.retrieve(request)
+        else:
+            return self.list(request)
 
     def post(self, request):
-        serializer = UserCarSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
+
+    def put(self, request, id=None):
+        return self.update(request, id)
+
+    def delete(self, request, id=None):
+        return self.destroy(request, id)
 
 
-class BrandsAPIView(APIView):
+class ModelsGeneric(generics.GenericAPIView, mixins.ListModelMixin, mixins.DestroyModelMixin,
+                    mixins.CreateModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
+
+    serializer_class = CarModelSerializer
+    queryset = CarModel.objects.all()
+
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
-        brands = CarBrand.objects.all()
-        serializer = CarBrandSerializer(brands, many=True)
-        return Response(serializer.data)
+    lookup_field = 'id'
+
+    def get(self, request, id=None):
+        if id:
+            return self.retrieve(request)
+        else:
+            return self.list(request)
 
     def post(self, request):
-        serializer = CarBrandSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
+    def put(self, request, id=None):
+        return self.update(request, id)
 
-class ModelsAPIView(APIView):
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
+    def delete(self, request, id=None):
+        return self.destroy(request, id)
 
-    def get(self, request):
-        models = CarModel.objects.all()
-        serializer = CarModelSerializer(models, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = CarModelSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class RegistrationView(APIView):
 
